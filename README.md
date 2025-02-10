@@ -29,8 +29,8 @@ React, TypeScript, MobX, CSS Modules, Antd
 
 ## Инструкция для запуска
 
-- git clone (this)
-- cd
+- `git clone https://github.com/kandalova/crypto-exchanger.git`
+- `cd crypto-exchanger` 
 - `npm install`
 - `npm run dev`
 

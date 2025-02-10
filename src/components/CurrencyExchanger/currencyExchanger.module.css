@@ -1,0 +1,21 @@
+.exchanger {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border: 1px #242424 solid;
+    border-radius: 15px;
+    padding: 20px;
+    max-width: 300px;
+    min-width: 100px;
+    margin: 0 auto;
+}
+
+.rate {
+    height: 50px;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    padding: 0 10px;
+    font-size: 0.7rem;
+    color: rgba(135, 155, 231, 0.87);
+}

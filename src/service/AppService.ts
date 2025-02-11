@@ -1,7 +1,7 @@
 import { autorun, reaction } from 'mobx';
 import { AppStore } from '../store/AppStore.ts';
 import { getCoins, getConversion } from '../api/coin.api.ts';
-import { IConversionRequest } from '../types/conversion.ts';
+import { IConversionRequest, IConversionResponse } from '../types/conversion.ts';
 import { debounce } from 'lodash';
 
 export function setupStoreReactions({ coinStore, exchangeStore }: AppStore) {
@@ -21,49 +21,83 @@ export function setupStoreReactions({ coinStore, exchangeStore }: AppStore) {
 
   reaction(
     () => [exchangeStore.from.id, exchangeStore.from.amount],
-    ([fromId, fromAmount]) => {
-      if (exchangeStore.from.status.isLoading) return;
-      if (!fromId || !exchangeStore.to.id || !fromAmount) return;
-      exchangeStore.to.status.start();
-      debouncedFetch({
-        from: Number(fromId),
-        to: exchangeStore.to.id,
-        fromAmount: Number(fromAmount),
-      });
+    async ([fromId, fromAmount]) => {
+      const { from, to } = exchangeStore;
+      if (from.status.isLoading) return;
+      if (!fromId || !to.id || !fromAmount) return;
+      to.status.start();
+      debouncedFetch(
+        {
+          from: Number(fromId),
+          to: to.id,
+          fromAmount: Number(fromAmount),
+        },
+        ({ rate, estimatedAmount }: IConversionResponse) => {
+          to.setAmount(estimatedAmount);
+          exchangeStore.setRate(rate);
+        },
+        () => {
+          to.status.finish();
+        },
+      );
     },
   );
-
-  const debouncedFetch = debounce((args: IConversionRequest) => fetchConversion(args), 300);
-
-  const fetchConversion = async (request: IConversionRequest) => {
-    try {
-      const { rate, estimatedAmount } = await getConversion(request);
-      if (request.fromAmount) {
-        exchangeStore.to.setAmount(estimatedAmount);
-      }
-      if (request.toAmount) {
-        exchangeStore.from.setAmount(request.toAmount);
-      }
-      exchangeStore.setRate(rate);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      exchangeStore.to.status.finish();
-      exchangeStore.from.status.finish();
-    }
-  };
 
   reaction(
     () => [exchangeStore.to.id, exchangeStore.to.amount],
-    ([toId, toAmount]) => {
-      if (exchangeStore.to.status.isLoading) return;
-      if (!toId || !exchangeStore.from.id || !toAmount) return;
-      exchangeStore.from.status.start();
-      debouncedFetch({
-        from: exchangeStore.from.id,
-        to: Number(toId),
-        toAmount: Number(toAmount),
-      });
+    async ([toId, toAmount]) => {
+      const { from, to } = exchangeStore;
+      if (to.status.isLoading) return;
+      if (!toId || !from.id || !toAmount) return;
+      from.status.start();
+      debouncedFetch(
+        {
+          from: from.id,
+          to: Number(toId),
+          toAmount: Number(toAmount),
+        },
+        ({ rate, estimatedAmount }: IConversionResponse) => {
+          from.setAmount(estimatedAmount);
+          exchangeStore.setRate(rate);
+        },
+        () => {
+          from.status.finish();
+        },
+      );
     },
   );
+
+  reaction(
+    () => exchangeStore.swap.isLoading,
+    (isStarted) => {
+      if (!isStarted) return;
+      const { from, to, swap } = exchangeStore;
+      if (!from.id || !to.id) return;
+
+      if (from.amount) {
+        to.status.start();
+      }
+      const oldToId = to.id;
+      to.setId(from.id);
+      from.setId(oldToId);
+      swap.finish();
+    },
+  );
+
+  const fetchConversion = async (
+    request: IConversionRequest,
+    onSuccess: (results: IConversionResponse) => void,
+    onFinally?: VoidFunction,
+  ) => {
+    try {
+      const res = await getConversion(request);
+      onSuccess(res);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      onFinally?.();
+    }
+  };
+
+  const debouncedFetch = debounce(fetchConversion, 500);
 }

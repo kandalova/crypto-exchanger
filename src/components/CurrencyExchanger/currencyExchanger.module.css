@@ -2,20 +2,21 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    border: 1px #242424 solid;
+    border: 1px #bfbfbf solid;
     border-radius: 15px;
     padding: 20px;
     max-width: 300px;
     min-width: 100px;
     margin: 0 auto;
+    box-shadow: rgba(191, 191, 191, 0.52) 2px 2px 2px;
 }
 
-.rate {
+.panel {
     height: 50px;
     display: flex;
-    justify-content: start;
+    justify-content: space-between;
     align-items: center;
     padding: 0 10px;
     font-size: 0.7rem;
-    color: rgba(135, 155, 231, 0.87);
+    color: rgba(24, 144, 255, 0.65);
 }

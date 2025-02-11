@@ -1,6 +1,7 @@
 # Криптовалютный обменник
 
 ## Демо
+
 https://crypto-exchanger-teal.vercel.app/
 
 ## Описание
@@ -26,14 +27,14 @@ React, TypeScript, MobX, CSS Modules, Antd
 
 ## Todo
 
-- Кнопка реверс, при нажатии на которую криптовалюты поменяются местами
 - Добавить disposers
 - AbortController*
+- Добавить CSS color-schemes
 
 ## Инструкция для запуска
 
 - `git clone https://github.com/kandalova/crypto-exchanger.git`
-- `cd crypto-exchanger` 
+- `cd crypto-exchanger`
 - `npm install`
 - `npm run dev`
 

@@ -38,4 +38,3 @@ React, TypeScript, MobX, CSS Modules, Antd
 - `cd crypto-exchanger`
 - `npm install`
 - `npm run dev`
-

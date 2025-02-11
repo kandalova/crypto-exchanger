@@ -16,7 +16,7 @@ export const CurrencyExchanger = observer(() => {
         <Button
           disabled={exchangeStore.isBusy}
           type="dashed"
-          onClick={(_) => exchangeStore.startSwap()}
+          onClick={() => exchangeStore.startSwap()}
           icon={<SwapOutlined rotate={90} />}
         />
       </div>

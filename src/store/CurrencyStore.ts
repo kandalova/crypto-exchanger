@@ -2,17 +2,17 @@ import { makeAutoObservable } from 'mobx';
 import { StatusModel } from './StatusModel.ts';
 import { Nullable } from '../types/common.ts';
 
-export interface ICurrencyStore {
-  id: Nullable<number>;
-  amount: string;
-  status: StatusModel;
+// export interface ICurrencyStore {
+//   id: Nullable<number>;
+//   amount: string;
+//   status: StatusModel;
+//
+//   setAmount(value: string): void;
+//
+//   setId(value: number): void;
+// }
 
-  setAmount(value: string): void;
-
-  setId(value: number): void;
-}
-
-export class CurrencyStore implements ICurrencyStore {
+export class CurrencyStore {
   public amount = '';
   public id = null as Nullable<number>;
   public status = new StatusModel();
@@ -21,8 +21,8 @@ export class CurrencyStore implements ICurrencyStore {
     makeAutoObservable(this);
   }
 
-  setAmount(value: string | number) {
-    this.amount = '' + value;
+  setAmount(value: string) {
+    this.amount = value;
   }
 
   setId(value: number) {

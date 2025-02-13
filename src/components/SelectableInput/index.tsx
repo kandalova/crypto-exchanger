@@ -33,7 +33,7 @@ export const SelectableInput = observer(
     const filteredOptions: T[] = useMemo(() => {
       if (!search) return options;
       return options.filter((option) => filterFunc(option, search));
-    }, [search, options]);
+    }, [search, options, filterFunc]);
 
     const onDropdownVisibleChange = (open: boolean) => {
       if (!open) {

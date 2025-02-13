@@ -33,7 +33,7 @@ export function setupStoreReactions({ coinStore, exchangeStore }: AppStore) {
           fromAmount: Number(fromAmount),
         },
         ({ rate, estimatedAmount }: IConversionResponse) => {
-          to.setAmount(estimatedAmount);
+          to.setAmount('' + estimatedAmount);
           exchangeStore.setRate(rate);
         },
         () => {
@@ -57,7 +57,7 @@ export function setupStoreReactions({ coinStore, exchangeStore }: AppStore) {
           toAmount: Number(toAmount),
         },
         ({ rate, estimatedAmount }: IConversionResponse) => {
-          from.setAmount(estimatedAmount);
+          from.setAmount('' + estimatedAmount);
           exchangeStore.setRate(rate);
         },
         () => {

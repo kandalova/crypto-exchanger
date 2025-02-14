@@ -42,10 +42,7 @@ export const SelectableInput = observer(
     };
 
     const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-      const value = event.target.value;
-      if (/^\d*\.?\d*$/.test(value)) {
-        onInputChange(value);
-      }
+      onInputChange(event.target.value);
     };
 
     const renderOption = (option: { data: T }) => {

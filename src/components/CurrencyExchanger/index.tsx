@@ -12,7 +12,9 @@ export const CurrencyExchanger = observer(() => {
   const { from, to } = exchangeStore;
 
   const onInputChange = (value: string, target: ExchangerCurrencyKeys) => {
-    exchangeStore.setAmount(value, target);
+    if (/^\d*\.?\d*$/.test(value)) {
+      exchangeStore.setAmount(value, target);
+    }
   };
 
   const onSelectChange = (value: number, target: ExchangerCurrencyKeys) => {
